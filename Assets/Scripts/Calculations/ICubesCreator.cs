@@ -3,5 +3,5 @@ using UnityEngine;
 
 public interface ICubesCreator
 {
-    public List<Transform> Create(Color color, Matrix4x4[] matrices);
+    public void Create(Color color, Matrix4x4[] matrices, Transform parent);
 }

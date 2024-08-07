@@ -4,10 +4,8 @@ using Utils;
 
 public class CubesCreator : ICubesCreator
 {
-    public List<Transform> Create(Color color, Matrix4x4[] matrices)
+    public void Create(Color color, Matrix4x4[] matrices, Transform parent)
     {
-        List<Transform> cubes = new List<Transform>();
-
         foreach (var matrix in matrices)
         {
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
@@ -17,9 +15,7 @@ public class CubesCreator : ICubesCreator
             cube.localScale = matrix.GetScale();
             cube.GetComponent<MeshRenderer>().material.color = color;
 
-            cubes.Add(cube);
+            cube.SetParent(parent);
         }
-
-        return cubes;
     }
 }

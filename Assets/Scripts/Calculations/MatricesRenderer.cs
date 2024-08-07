@@ -11,30 +11,18 @@ public class MatricesRenderer : MonoBehaviour
 
     [Inject]
     private ICubesCreator _cubesCreator;
-    private List<ModelCube> _modelCubes = new List<ModelCube>();
 
     public void Render(Matrix4x4[] modelMatrices, Matrix4x4[] spaceMatrices)
     {
-        var modelCubes = _cubesCreator.Create(Color.red, modelMatrices);
-
-        foreach (var cube in modelCubes)
-        {
-            cube.SetParent(_modelContainer);
-            _modelCubes.Add(new ModelCube(cube));
-        }
-        
-        var spaceCubes = _cubesCreator.Create(Color.blue, spaceMatrices);
-
-        foreach (var cube in spaceCubes)
-        {
-            cube.SetParent(_spaceContainer);
-        }
+        _cubesCreator.Create(Color.red, modelMatrices, _modelContainer);
+        _cubesCreator.Create(Color.blue, spaceMatrices, _spaceContainer);
     }
 
     public void RenderOffsets(Matrix4x4[] offsets)
     {
         StartCoroutine(StartMove(offsets));
     }
+
 
     private IEnumerator StartMove(Matrix4x4[] offsets)
     {
@@ -43,50 +31,30 @@ public class MatricesRenderer : MonoBehaviour
 
         foreach (var offset in offsets)
         {
-            moving = StartCoroutine(MoveCubes(offset));
+            moving = StartCoroutine(MoveCubes(offset.GetPosition(), offset.rotation));
             yield return moving;
             yield return delay;
-            moving = StartCoroutine(ResetCubes());
+            moving = StartCoroutine(MoveCubes(Vector3.zero, Quaternion.identity));
             yield return moving;
         }
 
         Debug.Log("Finish");
     }
 
-    private IEnumerator MoveCubes(Matrix4x4 offset)
+    private IEnumerator MoveCubes(Vector3 position, Quaternion rotation)
     {
         float elapsedTime = 0;
         float lerpFactor = 0;
+
+        Vector3 startPosition = _modelContainer.position;
+        Quaternion startRotation = _modelContainer.rotation;
 
         while (lerpFactor < 1)
         {
             elapsedTime += Time.deltaTime;
             lerpFactor = elapsedTime / _delay;
-
-            foreach (var cube in _modelCubes)
-            {
-                cube.Move(offset, lerpFactor);
-            }
-
-            yield return null;
-        }
-    }
-
-    private IEnumerator ResetCubes()
-    {
-        float elapsedTime = 0;
-        float lerpFactor = 0;
-
-        while (lerpFactor < 1)
-        {
-            elapsedTime += Time.deltaTime;
-            lerpFactor = elapsedTime / _delay;
-
-            foreach (var cube in _modelCubes)
-            {
-                cube.Reset(lerpFactor);
-            }
-
+            _modelContainer.position = Vector3.Lerp(startPosition, position, lerpFactor);
+            _modelContainer.rotation = Quaternion.Lerp(startRotation, rotation, lerpFactor);
             yield return null;
         }
     }
