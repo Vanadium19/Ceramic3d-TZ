@@ -12,8 +12,8 @@ public class MatrixOffsetsFinder : MonoBehaviour
     [SerializeField] private TextAsset _modelJson;
     [SerializeField] private TextAsset _spaceJson;
 
-    [Inject]
     private IMatrixJsonConvert _matrixJsonConvert;
+    private IOffsetsVisualizer _offsetsVisualizer;
     private MatricesRenderer _matricesRenderer;
 
     private void Awake()
@@ -30,9 +30,16 @@ public class MatrixOffsetsFinder : MonoBehaviour
 
         Matrix4x4[] offsets = FindOffsets(modelMatrices, spaceMatrices).ToArray();
 
-        _matricesRenderer.RenderOffsets(offsets);
+        _offsetsVisualizer.Visualize(offsets);
 
         _matrixJsonConvert.ExportOffsetsToJson(_filePath, offsets);
+    }
+
+    [Inject]
+    private void Construct(IMatrixJsonConvert matrixJsonConvert, IOffsetsVisualizer offsetsVisualizer)
+    {
+        _matrixJsonConvert = matrixJsonConvert;
+        _offsetsVisualizer = offsetsVisualizer;
     }
 
     private List<Matrix4x4> FindOffsets(Matrix4x4[] modelMatrices, Matrix4x4[] spaceMatrices)
@@ -44,10 +51,6 @@ public class MatrixOffsetsFinder : MonoBehaviour
         foreach (var spaceMatrix in spaceMatrices)
         {
             offset = spaceMatrix * modelMatrix.inverse;
-
-            //Quaternion rotation = modelMatrix.rotation * spaceMatrix.rotation;
-            //Vector3 position = spaceMatrix.GetPosition() - modelMatrix.GetPosition();
-            //offset = Matrix4x4.TRS(position, rotation, Vector3.one);
 
             if (IsMatchWithOffset(modelMatrices, spaceMatrices, offset))
                 offsets.Add(offset);
