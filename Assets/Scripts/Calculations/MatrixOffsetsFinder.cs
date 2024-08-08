@@ -1,48 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Utils;
-using Zenject;
 
-[RequireComponent(typeof(MatricesRenderer))]
-public class MatrixOffsetsFinder : MonoBehaviour
+public class MatrixOffsetsFinder : IMatrixOffsetsFinder
 {
-    private readonly string _filePath = @"C:\Repos\Ceramic3d-TZ\Assets\JsonFiles\Result\offsets.json";
-    private readonly int _firstArrayIndex = 0;
+    private readonly int _firstArrayIndex = 0;   
 
-    [SerializeField] private TextAsset _modelJson;
-    [SerializeField] private TextAsset _spaceJson;
-
-    private IMatrixJsonConvert _matrixJsonConvert;
-    private IOffsetsVisualizer _offsetsVisualizer;
-    private MatricesRenderer _matricesRenderer;
-
-    private void Awake()
-    {
-        _matricesRenderer = GetComponent<MatricesRenderer>();
-    }
-
-    private void Start()
-    {
-        var modelMatrices = _matrixJsonConvert.GetMatrices(_modelJson.text);
-        var spaceMatrices = _matrixJsonConvert.GetMatrices(_spaceJson.text);
-
-        _matricesRenderer.Render(modelMatrices, spaceMatrices);
-
-        Matrix4x4[] offsets = FindOffsets(modelMatrices, spaceMatrices).ToArray();
-
-        _offsetsVisualizer.Visualize(offsets);
-
-        _matrixJsonConvert.ExportOffsetsToJson(_filePath, offsets);
-    }
-
-    [Inject]
-    private void Construct(IMatrixJsonConvert matrixJsonConvert, IOffsetsVisualizer offsetsVisualizer)
-    {
-        _matrixJsonConvert = matrixJsonConvert;
-        _offsetsVisualizer = offsetsVisualizer;
-    }
-
-    private List<Matrix4x4> FindOffsets(Matrix4x4[] modelMatrices, Matrix4x4[] spaceMatrices)
+    public List<Matrix4x4> FindOffsets(Matrix4x4[] modelMatrices, Matrix4x4[] spaceMatrices)
     {
         Matrix4x4 offset;
         Matrix4x4 modelMatrix = modelMatrices[_firstArrayIndex];        
