@@ -1,11 +1,14 @@
+using Calculations.Interfaces;
 using UnityEngine;
 
-
-public class CubesCreator : ICubesCreator
+namespace Calculations
 {
-    public void Create(Transform prefab, Matrix4x4[] matrices, Transform parent)
+    internal class CubesCreator : ICubesCreator
     {
-        foreach (var matrix in matrices)
-            Object.Instantiate(prefab, matrix.GetPosition(), matrix.rotation, parent);
+        public void Create(Transform prefab, Matrix4x4[] matrices, Transform parent)
+        {
+            foreach (var matrix in matrices)
+                Object.Instantiate(prefab, matrix.GetPosition(), matrix.rotation, parent);
+        }
     }
 }

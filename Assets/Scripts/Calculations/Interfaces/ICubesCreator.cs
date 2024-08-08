@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public interface ICubesCreator
+namespace Calculations.Interfaces
 {
-    public void Create(Transform prefab, Matrix4x4[] matrices, Transform parent);
+    public interface ICubesCreator
+    {
+        public void Create(Transform prefab, Matrix4x4[] matrices, Transform parent);
+    }
 }

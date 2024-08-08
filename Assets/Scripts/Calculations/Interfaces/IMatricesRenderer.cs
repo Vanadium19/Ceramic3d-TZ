@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public interface IMatricesRenderer
+namespace Calculations.Interfaces
 {
-    public void Render(Matrix4x4[] modelMatrices, Matrix4x4[] spaceMatrices);
+    public interface IMatricesRenderer
+    {
+        public void Render(Matrix4x4[] modelMatrices, Matrix4x4[] spaceMatrices);
+    }
 }

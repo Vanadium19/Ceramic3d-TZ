@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public interface IOffsetsVisualizer
+namespace Calculations.Interfaces
 {
-    public void Visualize(Matrix4x4[] offsets);
+    public interface IOffsetsVisualizer
+    {
+        public void Visualize(Matrix4x4[] offsets);
+    }
 }
