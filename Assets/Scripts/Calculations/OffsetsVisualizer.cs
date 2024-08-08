@@ -8,6 +8,8 @@ namespace Calculations
 {
     internal class OffsetsVisualizer : MonoBehaviour, IOffsetsVisualizer
     {
+        private readonly float _maxLerpFactor = 1f;
+
         [SerializeField] private float _delay;
 
         private Transform _transform;
@@ -40,7 +42,7 @@ namespace Calculations
             Vector3 startPosition = _transform.position;
             Quaternion startRotation = _transform.rotation;
 
-            while (lerpFactor < 1)
+            while (lerpFactor < _maxLerpFactor)
             {
                 elapsedTime += Time.deltaTime;
                 lerpFactor = elapsedTime / _delay;
