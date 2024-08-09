@@ -1,7 +1,6 @@
 using System.IO;
 using Calculations.Interfaces;
 using JsonTools;
-using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -23,12 +22,7 @@ namespace Calculations
             Matrix4x4[] modelMatrices = _matrixJsonConvert.GetMatrices(_modelJson.text);
             Matrix4x4[] spaceMatrices = _matrixJsonConvert.GetMatrices(_spaceJson.text);
 
-
-            Observable.Start(() => _offsetsFinder.FindOffsets(modelMatrices, spaceMatrices))
-                .ObserveOnMainThread()
-                .Do(offsets => _matricesRenderer.Render(modelMatrices, spaceMatrices))
-                .Subscribe(offsets => OnOffsetsFound(offsets.ToArray()))
-                .AddTo(this);
+            Execute(modelMatrices, spaceMatrices);
         }
 
         [Inject]
@@ -44,8 +38,11 @@ namespace Calculations
             _matrixJsonConvert = matrixJsonConvert;
         }
 
-        private void OnOffsetsFound(Matrix4x4[] offsets)
+        private void Execute(Matrix4x4[] modelMatrices, Matrix4x4[] spaceMatrices)
         {
+            Matrix4x4[] offsets = _offsetsFinder.FindOffsets(modelMatrices, spaceMatrices).ToArray();
+
+            _matricesRenderer.Render(modelMatrices, spaceMatrices);
             _offsetsVisualizer.Visualize(offsets);
 
             if (File.Exists(_resultFilePath))
