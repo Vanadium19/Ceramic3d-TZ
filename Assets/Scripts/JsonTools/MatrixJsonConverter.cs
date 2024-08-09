@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JsonTools
 {
-    public class MatrixJsonConverter : JsonConverter
+    internal class MatrixJsonConverter : JsonConverter
     {
         private readonly int _matrixSize = 4;
 

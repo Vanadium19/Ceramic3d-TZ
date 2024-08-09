@@ -20,8 +20,8 @@ namespace Calculations
 
         private void Start()
         {
-            var modelMatrices = _matrixJsonConvert.GetMatrices(_modelJson.text);
-            var spaceMatrices = _matrixJsonConvert.GetMatrices(_spaceJson.text);
+            Matrix4x4[] modelMatrices = _matrixJsonConvert.GetMatrices(_modelJson.text);
+            Matrix4x4[] spaceMatrices = _matrixJsonConvert.GetMatrices(_spaceJson.text);
 
 
             Observable.Start(() => _offsetsFinder.FindOffsets(modelMatrices, spaceMatrices))
