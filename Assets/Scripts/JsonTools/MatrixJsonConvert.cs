@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JsonTools
 {
-    public class MatrixJsonConvert : IMatrixJsonConvert
+    internal class MatrixJsonConvert : IMatrixJsonConvert
     {
         public void ExportOffsetsToJson(string path, Matrix4x4[] matrices)
         {
