@@ -1,3 +1,4 @@
+using System.IO;
 using Calculations.Interfaces;
 using JsonTools;
 using UniRx;
@@ -8,10 +9,9 @@ namespace Calculations
 {
     internal class CalculationsController : MonoBehaviour
     {
-        private readonly string _filePath = @"C:\Repos\Ceramic3d-TZ\Assets\JsonFiles\Result\offsets.json";
-
         [SerializeField] private TextAsset _modelJson;
         [SerializeField] private TextAsset _spaceJson;
+        [SerializeField] private string _resultFilePath;
 
         private IMatrixOffsetsFinder _offsetsFinder;
         private IOffsetsVisualizer _offsetsVisualizer;
@@ -47,7 +47,9 @@ namespace Calculations
         private void OnOffsetsFound(Matrix4x4[] offsets)
         {
             _offsetsVisualizer.Visualize(offsets);
-            _matrixJsonConvert.ExportOffsetsToJson(_filePath, offsets);
+
+            if (File.Exists(_resultFilePath))
+                _matrixJsonConvert.ExportOffsetsToJson(_resultFilePath, offsets);
         }
     }
 }
